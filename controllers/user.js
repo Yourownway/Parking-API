@@ -10,9 +10,26 @@ module.exports = (services) => {
       try {
         if (!email || !password) res.status(400).json("missing parameters");
         else {
-          let hash = await services.cryptPassword.hashPassword(password);
+          let hash = await services.bcryptPassword.hashPassword(password);
           console.log(hash, "controllers");
-          let result = await services.user.register([email, hash]);
+          let result = await services.user.register([email, hash, role]);
+
+          res.status(201).json("new user registered");
+        }
+      } catch (err) {
+        res.status(400).json(err);
+      }
+    },
+    login: async (req, res) => {
+      const { email, password } = req.body;
+      try {
+        if (!email || !password) res.status(400).json("missing parameters");
+        else {
+          let result = await services.user.getByEmail([email]);
+          if (!result) res.status(400).json("user doesn't exsist yet");
+          let compare = await services.bcryptPassword.comparePassword(password);
+
+          if (!compare) res.status(400).json("wrong password");
 
           res.status(201).json("new user registered");
         }
