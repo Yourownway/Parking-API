@@ -5,8 +5,7 @@ module.exports = (services) => {
       res.send(result);
     },
     register: async (req, res) => {
-      const email = req.body.email;
-      const password = req.body.password;
+      const { email, password, role } = req.body;
 
       try {
         if (!email || !password) res.status(400).json("missing parameters");
