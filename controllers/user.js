@@ -68,7 +68,9 @@ module.exports = (services) => {
           });
         }
       } catch (err) {
-        res.status(400).json(err);
+        return res
+          .status(500)
+          .json({ error: err, errMessage: "500 error server" });
       }
     },
     delete: async (req, res) => {},

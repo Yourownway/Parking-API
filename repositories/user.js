@@ -31,7 +31,7 @@ module.exports = (db) => {
       ] = await db
         .promise()
         .execute(
-          "SELECT id, userEmail,userPassword FROM Users WHERE userEmail = ? LIMIT 1",
+          "SELECT id, userEmail,userPassword,isAdmin FROM Users WHERE userEmail = ? LIMIT 1",
           [email]
         );
 
