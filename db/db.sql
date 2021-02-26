@@ -5,8 +5,8 @@ USE `ParkingAPI`;
 CREATE TABLE IF NOT EXISTS `Users` 
 (
     `id` VARCHAR(36) PRIMARY KEY,
-    `userEmail` VARCHAR(100),
-    `userPassword` VARCHAR(255),
+    `userEmail` VARCHAR(100) NOT NULL UNIQUE,
+    `userPassword` VARCHAR(256),
     `isAdmin` BOOLEAN DEFAULT false,
     `createdAt` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `updatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP

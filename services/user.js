@@ -9,6 +9,14 @@ module.exports = (repositories) => {
     getByEmail: async (email) => {
       return repositories.user.getByEmail(email);
     },
+
+    update: async (data) => {
+      return repositories.user.update(data);
+    },
+
+    delete: async (data) => {
+      return repositories.user.delete(data);
+    },
     // login: async (data) => {
     //   return repositories.user.login(data);
     // },

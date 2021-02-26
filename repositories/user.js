@@ -1,7 +1,7 @@
 module.exports = (db) => {
   const user_repository = {
     getAll: async () => {
-      const rows = await models.user.promise().execute("select * from Users");
+      const rows = await models.user.promise().execute("SELECT * FROM Users");
       return rows;
     },
     // register: async (data) => {
