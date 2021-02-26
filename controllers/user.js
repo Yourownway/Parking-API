@@ -30,6 +30,8 @@ module.exports = (services) => {
           let compare = await services.bcryptPassword.comparePassword(password);
 
           if (!compare) res.status(400).json("wrong password");
+          let token = await services.token.generate();
+          if (!token) res.status(500).json("server error");
 
           res.status(201).json("new user registered");
         }

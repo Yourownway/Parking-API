@@ -1,25 +1,35 @@
-CREATE DATABASE IF NOT EXISTS ParkingAPI;
+CREATE DATABASE IF NOT EXISTS `ParkingAPI`;
 
-USE ParkingAPI;
+USE `ParkingAPI`;
 
-CREATE TABLE Users
+CREATE TABLE IF NOT EXISTS `Users` 
 (
-    id VARCHAR(36) PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    email VARCHAR(100),
-    password VARCHAR(255),
-    role VARCHAR(50)
+    `id` VARCHAR(36) PRIMARY KEY,
+    `userEmail` VARCHAR(100),
+    `userPassword` VARCHAR(255),
+    `isAdmin` BOOLEAN DEFAULT false,
+     `createdAt` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `updatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE Places
+CREATE TABLE IF NOT EXISTS `Places` 
 (
-    id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    userId VARCHAR(36),
-    isAvailable BOOLEAN,
-    floor INT,
-    usageTime TIME,
-    userId VARCHAR(36),
-    FOREIGN KEY (idUser) REFERENCES Users(id) 
-
+    `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    `userId` VARCHAR(36),
+    `isAvailable` BOOLEAN,
+    `floor` INT,
+     FOREIGN KEY (userId) REFERENCES Users(id), 
+    `createdAt` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `updatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
-
+CREATE TABLE IF NOT EXISTS `Bookings` 
+(
+    `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    `userId` VARCHAR(36),
+    `placeId` INT,
+     FOREIGN KEY (userId) REFERENCES Users(id),
+     FOREIGN KEY (placeId) REFERENCES Places(id),
+    `createdAt` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `updatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP
+);
