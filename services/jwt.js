@@ -1,10 +1,30 @@
 module.exports = (jwt) => {
-  const jwt_service = {
-    generate: async (data) => {
-      const token = await jwt.sign();
-      return token;
+  const token_service = {
+    createToken: async (res, data) => {
+      const secretKey = process.env.JWT_SIGN_SECRET;
+
+      const token = jwt.sign(
+        {
+          userEmail: data.userEmail,
+          id: data.id,
+        },
+        secretKey,
+        {
+          expiresIn: "24h",
+        }
+      );
+
+      res.cookie("token", token, {
+        maxAge: 3600000,
+        secure: false,
+        httpOnly: true,
+      });
+      return true;
+    },
+    verifyToken: async (token, secretKey) => {
+      const decrypt = await jwt.verify(token, secretKey);
+      return decrypt;
     },
   };
-
-  return jwt_service;
+  return token_service;
 };

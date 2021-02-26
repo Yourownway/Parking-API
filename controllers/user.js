@@ -5,35 +5,67 @@ module.exports = (services) => {
       res.status(200).json({ result });
     },
     register: async (req, res) => {
-      const { email, password, role } = req.body;
-
+      const { userEmail, userPassword } = (data = req.body);
       try {
-        if (!email || !password) res.status(400).json("missing parameters");
-        else {
-          let hash = await services.bcryptPassword.hashPassword(password);
-          console.log(hash, "controllers");
-          let result = await services.user.register([email, hash, role]);
+        if (!userEmail || !userPassword)
+          return res
+            .status(400)
+            .json({ errMessage: "error missing parameters" });
 
-          res.status(201).json("new user registered");
-        }
+        const hash = await services.bcryptPassword.hashPassword(
+          data.userPassword
+        );
+
+        data.userPassword = hash;
+
+        const email = await services.user.getByEmail(data.userEmail);
+
+        if (email)
+          return res
+            .status(400)
+            .json({ errMessage: `${data.userEmail} already exist` });
+
+        const result = await services.user.register(data);
+        if (result) return res.status(201).json("new user registered");
       } catch (err) {
-        res.status(400).json(err);
+        return res
+          .status(500)
+          .json({ error: err, errMessage: "500 error server" });
       }
     },
     login: async (req, res) => {
-      const { email, password } = req.body;
+      const { userEmail, userPassword } = (data = req.body);
       try {
-        if (!email || !password) res.status(400).json("missing parameters");
+        if (!userEmail || !userPassword)
+          res.status(400).json("missing parameters");
         else {
-          let result = await services.user.getByEmail([email]);
-          if (!result) res.status(400).json("user doesn't exsist yet");
-          let compare = await services.bcryptPassword.comparePassword(password);
+          const userFound = await services.user.getByEmail(userEmail);
 
-          if (!compare) res.status(400).json("wrong password");
-          let token = await services.token.generate();
-          if (!token) res.status(500).json("server error");
+          if (!userFound) {
+            return res
+              .status(401)
+              .json({ message: `user ${userEmail} doesn't exist yet` });
+          }
 
-          res.status(201).json("new user registered");
+          const comparePassword = await services.bcryptPassword.comparePassword(
+            userPassword,
+            userFound.userPassword
+          );
+          console.log("userFound", comparePassword);
+
+          if (!comparePassword) {
+            return res.status(400).json({ errMessage: "Bad password" });
+          }
+
+          const isTokenCreate = await services.jwtoken.createToken(
+            res,
+            userFound
+          );
+          if (!isTokenCreate)
+            return res.status(500).json({ errMessage: "error server" });
+          return res.status(200).json({
+            message: `Welcome to the ParkingAPI ${userFound.userEmail}`,
+          });
         }
       } catch (err) {
         res.status(400).json(err);

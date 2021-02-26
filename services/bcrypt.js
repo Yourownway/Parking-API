@@ -1,14 +1,15 @@
 module.exports = (bcrypt) => {
   const bcrypt_service = {
-    hashPassword: async (data) => {
-      const hash = await bcrypt.hash(data, 10);
-      return hash;
+    hashPassword: async (password) => {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      return hashedPassword;
     },
-    comparePassword: async (data, hash) => {
-      const compare = bcrypt.compare(data, hash);
+    comparePassword: async (password, hash) => {
+      console.log(password, "tutu");
+      const compare = await bcrypt.compare(password, hash);
+      console.log(compare, "ici");
       return compare;
     },
   };
-
   return bcrypt_service;
 };
