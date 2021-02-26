@@ -71,6 +71,8 @@ module.exports = (services) => {
         res.status(400).json(err);
       }
     },
+    delete: async (req, res) => {},
+    update: async (req, res) => {},
   };
 
   return user_controller;

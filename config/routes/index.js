@@ -1,9 +1,9 @@
 module.exports = (express, controllers) => {
-    const user_route = require('./user');
+  const user_route = require("./user");
 
-    const routes = [
-        user_route(express, controllers)
-    ]
+  const middlewares = require("../../middlewares/index");
 
-    return routes
-}
+  const routes = [user_route(express, controllers, middlewares)];
+
+  return routes;
+};

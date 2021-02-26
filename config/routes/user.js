@@ -1,4 +1,4 @@
-module.exports = (express, controllers) => {
+module.exports = (express, controllers, middlewares) => {
   const router = express.Router();
 
   router.route("/users").get(controllers.user.getAll);
