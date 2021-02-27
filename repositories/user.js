@@ -15,11 +15,25 @@ module.exports = (db) => {
     //   return rows;
     // },
     register: async (data) => {
-      const rows = await db
+      console.log("tata");
+      await db
         .promise()
         .execute(
           `INSERT INTO Users (id, userEmail, userPassword) VALUES (UUID(),?,?)`,
-          [data.userEmail, data.userPassword]
+          [data.userEmail, data.userPassword],
+          (err, result) => {
+            if (err) {
+              if (
+                err.code == DUPLICATE_ERROR_CODE ||
+                err.code == "ER_DUP_ENTRY"
+              ) {
+                console.log(result, "result");
+                return;
+              } else {
+                throw err;
+              }
+            }
+          }
         );
 
       return rows;

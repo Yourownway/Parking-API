@@ -18,14 +18,16 @@ module.exports = (services) => {
 
         data.userPassword = hash;
 
-        const email = await services.user.getByEmail(data.userEmail);
+        // const email = await services.user.getByEmail(data.userEmail);
 
-        if (email)
-          return res
-            .status(400)
-            .json({ errMessage: `${data.userEmail} already exist` });
+        // if (email)
+        //   return res
+        //     .status(400)
+        //     .json({ errMessage: `${data.userEmail} already exist` });
 
         const result = await services.user.register(data);
+
+        console.log(result, "ici");
         if (result) return res.status(201).json("new user registered");
       } catch (err) {
         return res
