@@ -1,13 +1,17 @@
 // controllers dépendencies
-const services = require('../services/index');
+const services = require("../services/index");
 
 // controllers
-const user_controller = require('./user');
+const users_controller = require("./users"),
+  places_controller = require("./places"),
+  bookings_controller = require("./bookings");
 
 // create a controllers object for map all the controllers
 const controllers = {
-    user: user_controller(services)
-}
+  users: users_controller(services),
+  places: places_controller(services),
+  bookings: bookings_controller(services),
+};
 
 // export our controllers object
 module.exports = controllers;

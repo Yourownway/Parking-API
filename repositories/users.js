@@ -1,8 +1,8 @@
 module.exports = (db) => {
-  const user_repository = {
+  const users_repository = {
     getAll: async () => {
-      const [rows] = await models.user.promise().execute("SELECT * FROM Users");
-      return rows;
+      const [rows] = await db.promise().execute("SELECT * FROM Users");
+      return rows[0];
     },
     register: async (data) => {
       const [row] = await db
@@ -73,5 +73,5 @@ module.exports = (db) => {
     },
   };
 
-  return user_repository;
+  return users_repository;
 };

@@ -1,10 +1,8 @@
-const { compare } = require("bcrypt");
-
 module.exports = (services) => {
-  const user_controller = {
+  const users_controller = {
     getAll: async (req, res) => {
       let result = await services.user.getAll();
-      res.status(200).json({ result });
+      res.status(200).json({ success: result });
     },
     register: async (req, res) => {
       const { userEmail, userPassword } = (data = req.body);
@@ -21,18 +19,16 @@ module.exports = (services) => {
         data.userPassword = hash;
 
         const result = await services.user.register(data);
-        if (!result) {
-          console.log("tutu");
-        }
-        console.log(result, "ici");
-        if (result) return res.status(201).json("new user registered");
+
+        if (result)
+          return res.status(200).json({ success: "new user registered" });
       } catch (err) {
         if (err.code === "ER_DUP_ENTRY") {
           res
             .status(400)
             .json({ errMessage: `${data.userEmail} already exist` });
         }
-        console.log(err);
+
         return res
           .status(500)
           .json({ error: err, errMessage: "500 error server" });
@@ -68,7 +64,7 @@ module.exports = (services) => {
           if (!isTokenCreate)
             return res.status(500).json({ errMessage: "error server" });
           return res.status(200).json({
-            message: `Welcome to the ParkingAPI ${userFound.userEmail}`,
+            success: `Welcome to the ParkingAPI ${userFound.userEmail}`,
           });
         }
       } catch (err) {
@@ -86,7 +82,7 @@ module.exports = (services) => {
         if (deleteUser.affectedRows === 1) {
           res
             .status(200)
-            .json({ message: `user ${req.user.userEmail} is deleted` });
+            .json({ success: `user ${req.user.userEmail} is deleted` });
         } else {
           res.status(400).json({
             errMessage: `user ${req.user.userEmail} is already deleted`,
@@ -123,7 +119,7 @@ module.exports = (services) => {
         const updateUser = await services.user.update(userId, data);
 
         if (updateUser.changedRows > 0) {
-          res.status(200).json({ message: `user is updated` });
+          res.status(200).json({ success: `user is updated` });
         } else {
           res.status(400).json({
             errMessage: `user ${req.user.userEmail} is already updated`,
@@ -137,5 +133,5 @@ module.exports = (services) => {
     },
   };
 
-  return user_controller;
+  return users_controller;
 };
