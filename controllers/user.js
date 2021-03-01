@@ -1,3 +1,5 @@
+const { compare } = require("bcrypt");
+
 module.exports = (services) => {
   const user_controller = {
     getAll: async (req, res) => {
@@ -18,18 +20,19 @@ module.exports = (services) => {
 
         data.userPassword = hash;
 
-        // const email = await services.user.getByEmail(data.userEmail);
-
-        // if (email)
-        //   return res
-        //     .status(400)
-        //     .json({ errMessage: `${data.userEmail} already exist` });
-
         const result = await services.user.register(data);
-
+        if (!result) {
+          console.log("tutu");
+        }
         console.log(result, "ici");
         if (result) return res.status(201).json("new user registered");
       } catch (err) {
+        if (err.code === "ER_DUP_ENTRY") {
+          res
+            .status(400)
+            .json({ errMessage: `${data.userEmail} already exist` });
+        }
+        console.log(err);
         return res
           .status(500)
           .json({ error: err, errMessage: "500 error server" });
@@ -53,13 +56,12 @@ module.exports = (services) => {
             userPassword,
             userFound.userPassword
           );
-          console.log("userFound", comparePassword);
 
           if (!comparePassword) {
             return res.status(400).json({ errMessage: "Bad password" });
           }
 
-          const isTokenCreate = await services.jwtoken.createToken(
+          const isTokenCreate = await services.token.createToken(
             res,
             userFound
           );
@@ -75,8 +77,64 @@ module.exports = (services) => {
           .json({ error: err, errMessage: "500 error server" });
       }
     },
-    delete: async (req, res) => {},
-    update: async (req, res) => {},
+    delete: async (req, res) => {
+      const userId = req.user.id;
+
+      try {
+        const deleteUser = await services.user.delete(userId);
+        console.log(deleteUser, "controller delete");
+        if (deleteUser.affectedRows === 1) {
+          res
+            .status(200)
+            .json({ message: `user ${req.user.userEmail} is deleted` });
+        } else {
+          res.status(400).json({
+            errMessage: `user ${req.user.userEmail} is already deleted`,
+          });
+        }
+      } catch (err) {
+        return res
+          .status(500)
+          .json({ error: err, errMessage: "500 error server" });
+      }
+    },
+    update: async (req, res) => {
+      const userId = req.user.id;
+      const data = req.body;
+
+      try {
+        const userFound = await services.user.getById(userId);
+
+        const comparePassword = await services.bcryptPassword.comparePassword(
+          data.userPassword,
+          userFound.userPassword
+        );
+
+        if (!comparePassword) {
+          const hash = await services.bcryptPassword.hashPassword(
+            data.userPassword
+          );
+
+          data.userPassword = hash;
+        } else {
+          data.userPassword = userFound.userPassword;
+        }
+
+        const updateUser = await services.user.update(userId, data);
+
+        if (updateUser.changedRows > 0) {
+          res.status(200).json({ message: `user is updated` });
+        } else {
+          res.status(400).json({
+            errMessage: `user ${req.user.userEmail} is already updated`,
+          });
+        }
+      } catch (err) {
+        return res
+          .status(500)
+          .json({ error: err, errMessage: "500 error server" });
+      }
+    },
   };
 
   return user_controller;

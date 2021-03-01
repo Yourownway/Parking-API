@@ -22,6 +22,7 @@ module.exports = (jwt) => {
       return true;
     },
     verifyToken: async (token, secretKey) => {
+      console.log("token2");
       const decrypt = await jwt.verify(token, secretKey);
       return decrypt;
     },

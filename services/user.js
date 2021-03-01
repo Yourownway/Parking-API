@@ -9,21 +9,17 @@ module.exports = (repositories) => {
     getByEmail: async (email) => {
       return repositories.user.getByEmail(email);
     },
+    getById: async (id) => {
+      return repositories.user.getById(id);
+    },
 
-    update: async (data) => {
-      return repositories.user.update(data);
+    update: async (id, data) => {
+      return repositories.user.update(id, data);
     },
 
     delete: async (data) => {
       return repositories.user.delete(data);
     },
-    // login: async (data) => {
-    //   return repositories.user.login(data);
-    // },
-    // getById: async (id) => {
-    //   const rows = await repositories.user.getById(id);
-    //   return rows[0];
-    // },
   };
 
   return user_service;

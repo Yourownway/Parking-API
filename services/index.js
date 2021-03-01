@@ -12,7 +12,7 @@ const user_service = require("./user"),
 const services = {
   user: user_service(repositories),
   bcryptPassword: bcrypt_service(bcrypt),
-  jwtoken: jwt_service(jwt),
+  token: jwt_service(jwt),
 };
 
 // export our service object
