@@ -1,3 +1,4 @@
+
 CREATE DATABASE IF NOT EXISTS `ParkingAPI`;
 
 USE `ParkingAPI`;
@@ -27,12 +28,24 @@ CREATE TABLE IF NOT EXISTS `Bookings`
 (
     `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     `userId` VARCHAR(36),
-    `placeId` INT,
+    `placeId` INT NOT NULL UNIQUE,
      FOREIGN KEY (userId) REFERENCES Users(id),
      FOREIGN KEY (placeId) REFERENCES Places(id),
     `createdAt` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `updatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+
+
+
+
+DELIMITER $$ 
+CREATE PROCEDURE book_places (IN user VARCHAR(36), IN place INT)
+BEGIN
+INSERT INTO Bookings (userId, placeId) VALUES (user,place);
+UPDATE Places SET isAvailable = 0 WHERE Places.id = place;
+SELECT * FROM Places WHERE Places.id = place;
+END$$
+DELIMITER ;
 
 SET @ID_SEEDERS = UUID();
 

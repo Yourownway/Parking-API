@@ -17,6 +17,19 @@ module.exports = (db) => {
 
       return rows;
     },
+    update: async (data) => {
+      console.log(data.placeId);
+      const [
+        rows,
+      ] = await db
+        .promise()
+        .execute(
+          "UPDATE Places SET isAvailable = 'true'  WHERE id = ? (SELECT * WHERE id = 1)",
+          [data.placeId]
+        );
+      console.log(rows);
+      return rows;
+    },
   };
   return places_repository;
 };

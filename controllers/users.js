@@ -20,15 +20,12 @@ module.exports = (services) => {
 
         const result = await services.user.register(data);
 
-        if (result)
-          return res.status(200).json({ success: "new user registered" });
-      } catch (err) {
-        if (err.code === "ER_DUP_ENTRY") {
-          res
+        if (result.affectedRows === 0)
+          return res
             .status(400)
             .json({ errMessage: `${data.userEmail} already exist` });
-        }
-
+        return res.status(200).json({ success: "new user registered" });
+      } catch (err) {
         return res
           .status(500)
           .json({ error: err, errMessage: "500 error server" });

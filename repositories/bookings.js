@@ -4,17 +4,14 @@ module.exports = (db) => {
       const [rows] = await db.promise().execute("SELECT * FROM Bookings");
       return rows[0];
     },
-    create: async ({ userId, placeId }) => {
-      const [rows] = await db.promise().execute(
-        `INSERT INTO Bookings (userId, placeId)
-        SELECT * FROM (SELECT ?, ?) AS tmp
-        WHERE NOT EXISTS (
-            SELECT placeId FROM Bookings WHERE placeId = ?
-        ) LIMIT 1;`,
-        [userId, placeId, placeId]
-      );
+    create: async (data) => {
+      console.log(data, "ici");
+      const [rows] = await db
+        .promise()
+        .execute("CALL book_places (?,?);", [data.userId, data.placeId]);
+
       console.log(rows);
-      return rows;
+      return rows[0];
     },
   };
   return bookings_repository;

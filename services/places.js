@@ -6,6 +6,9 @@ module.exports = (repositories) => {
     getPlacesByFloor: async (floor) => {
       return await repositories.places.getPlacesByFloor(floor);
     },
+    update: async (data) => {
+      return await repositories.places.update(data);
+    },
   };
   return places_service;
 };

@@ -5,23 +5,13 @@ module.exports = (db) => {
       return rows[0];
     },
     register: async (data) => {
-      const [row] = await db
+      const [
+        row,
+      ] = await db
         .promise()
         .execute(
-          `INSERT INTO Users (id, userEmail, userPassword) VALUES (UUID(),?,?)`,
-          [data.userEmail, data.userPassword],
-          (err, result) => {
-            if (err) {
-              if (
-                err.code == DUPLICATE_ERROR_CODE ||
-                err.code == "ER_DUP_ENTRY"
-              ) {
-                return;
-              } else {
-                throw err;
-              }
-            }
-          }
+          `INSERT IGNORE INTO Users (id, userEmail, userPassword) VALUES (UUID(),?,?)`,
+          [data.userEmail, data.userPassword]
         );
 
       return row;

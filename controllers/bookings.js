@@ -5,13 +5,24 @@ module.exports = (services) => {
     },
 
     create: async (req, res) => {
-      let { placeId } = req.params;
-
-      const bookPlace = await services.bookings.create({
+      let data = {
         userId: req.user.id,
-        placeId: placeId,
-      });
-      console.log(bookPlace);
+        placeId: req.params.placeId,
+      };
+      try {
+        const bookPlace = await services.bookings.create(data);
+        if (bookPlace) {
+          return res.status(200).json({ success: bookPlace });
+        }
+      } catch (err) {
+        if (err.code === "ER_DUP_ENTRY")
+          return res
+            .status(400)
+            .json({
+              errMessage: `error place number ${data.placeId} already book`,
+            });
+        return res.status(500).json(err);
+      }
     },
 
     delete: async (req, res) => {
