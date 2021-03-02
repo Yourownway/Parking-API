@@ -1,11 +1,15 @@
 module.exports = (express, controllers, middlewares) => {
   const router = express.Router();
 
-  // router.route("/bookings").get(controllers.bookings.getAll);
+  router.route("/bookings").get(controllers.bookings.getAll);
 
-  // router.route("/booking").post(controllers.bookings.createBooking);
+  router
+    .route("/:placeId/booking")
+    .get(middlewares.auth.verifyToken, controllers.bookings.create);
 
-  // router.route("/booking").delete();
+  router
+    .route("/booking")
+    .delete(middlewares.auth.verifyToken, controllers.bookings.delete);
 
   return router;
 };

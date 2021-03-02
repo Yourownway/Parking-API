@@ -41,7 +41,7 @@ module.exports = (services) => {
           res.status(400).json("missing parameters");
         else {
           const userFound = await services.user.getByEmail(userEmail);
-
+          console.log(userFound);
           if (!userFound) {
             return res
               .status(401)

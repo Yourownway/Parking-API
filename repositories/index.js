@@ -10,7 +10,7 @@ const users_repository = require("./users"),
 const repositories = {
   users: users_repository(db),
   places: places_repository(db),
-  booking: bookings_repository(db),
+  bookings: bookings_repository(db),
 };
 
 // export our repositories object
