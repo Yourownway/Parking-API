@@ -8,7 +8,7 @@ module.exports = (express, controllers, middlewares) => {
     .get(middlewares.auth.verifyToken, controllers.bookings.create);
 
   router
-    .route("/booking")
+    .route("/:placeId/booking")
     .delete(middlewares.auth.verifyToken, controllers.bookings.delete);
 
   return router;

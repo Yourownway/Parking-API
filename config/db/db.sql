@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS `Places`
     `id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     `isAvailable` BOOLEAN DEFAULT true,
     `floor` INT,
-    `lastRentalTime` TIME DEFAULT NULL, 
+    `rentalTime` TIME DEFAULT NULL, 
     `createdAt` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `updatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP
 );
@@ -42,7 +42,17 @@ DELIMITER $$
 CREATE PROCEDURE book_places (IN user VARCHAR(36), IN place INT)
 BEGIN
 INSERT INTO Bookings (userId, placeId) VALUES (user,place);
-UPDATE Places SET isAvailable = 0 WHERE Places.id = place;
+UPDATE Places SET isAvailable = 0, updatedAt = CURRENT_TIMESTAMP WHERE Places.id = place;
+SELECT * FROM Places WHERE Places.id = place;
+END$$
+DELIMITER ;
+
+
+DELIMITER $$ 
+CREATE PROCEDURE remove_book ( IN place INT)
+BEGIN
+DELETE FROM Bookings WHERE Bookings.placeId = place ;
+UPDATE Places SET isAvailable = 1, rentalTime = CURRENT_TIMESTAMP - Places.updatedAt WHERE Places.id = place;
 SELECT * FROM Places WHERE Places.id = place;
 END$$
 DELIMITER ;

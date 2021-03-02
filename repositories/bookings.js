@@ -5,10 +5,18 @@ module.exports = (db) => {
       return rows[0];
     },
     create: async (data) => {
-      console.log(data, "ici");
       const [rows] = await db
         .promise()
         .execute("CALL book_places (?,?);", [data.userId, data.placeId]);
+
+      console.log(rows);
+      return rows[0];
+    },
+    delete: async (data) => {
+      console.log("dada");
+      const [rows] = await db
+        .promise()
+        .execute("CALL remove_book (?);", [data.placeId]);
 
       console.log(rows);
       return rows[0];

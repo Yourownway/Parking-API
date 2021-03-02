@@ -23,10 +23,9 @@ module.exports = (db) => {
         rows,
       ] = await db
         .promise()
-        .execute(
-          "UPDATE Places SET isAvailable = 'true'  WHERE id = ? (SELECT * WHERE id = 1)",
-          [data.placeId]
-        );
+        .execute("UPDATE Places SET isAvailable = 1  WHERE id = ?", [
+          data.placeId,
+        ]);
       console.log(rows);
       return rows;
     },

@@ -16,20 +16,29 @@ module.exports = (services) => {
         }
       } catch (err) {
         if (err.code === "ER_DUP_ENTRY")
-          return res
-            .status(400)
-            .json({
-              errMessage: `error place number ${data.placeId} already book`,
-            });
+          return res.status(400).json({
+            errMessage: `error place number ${data.placeId} already book`,
+          });
         return res.status(500).json(err);
       }
     },
 
     delete: async (req, res) => {
-      let { userId } = req.user.id;
-      let { placeId } = req.params;
-      const deletePlace = await services.bookings.delete({ userId, placeId });
-      console.log(deletePlace);
+      let data = {
+        userId: req.user.id,
+        placeId: req.params.placeId,
+      };
+      try {
+        const deletePlace = await services.bookings.delete(data);
+        if (deletePlace) {
+          return res.status(200).json({
+            message: `You're using place number ${deletePlace[0].id} during ${deletePlace[0].rentalTime}`,
+            success: deletePlace[0],
+          });
+        }
+      } catch (err) {
+        return res.status(500).json(err);
+      }
     },
   };
   return bookings_controller;
