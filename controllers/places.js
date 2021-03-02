@@ -7,5 +7,18 @@ module.exports = (services) => {
       }
       const create = await services.places.create(data);
     },
+    getPlacesByFloor: async (req, res) => {
+      let { floor } = req.params;
+
+      const getPlaces = await services.places.getPlacesByFloor(floor);
+
+      if (!getPlaces) {
+        return res
+          .status(400)
+          .json({ errMessage: "error no parking places on this floor" });
+      }
+      return res.status(200).json({ success: getPlaces });
+    },
   };
+  return places_controller;
 };

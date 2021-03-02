@@ -4,7 +4,7 @@ module.exports = (express, controllers, middlewares) => {
   // router.route("/places").get(controllers.places.getAll);
   // router.route("/place").get(controllers.places.create);
 
-  // router.route("/places/:floor").post(controllers.places.getPlacesByFloor);
+  router.route("/:floor/places").get(controllers.places.getPlacesByFloor);
 
   return router;
 };
