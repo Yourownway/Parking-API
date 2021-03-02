@@ -30,7 +30,6 @@ module.exports = (db) => {
       return row[0];
     },
     getById: async (id) => {
-      console.log(id);
       const [
         row,
       ] = await db
@@ -39,11 +38,10 @@ module.exports = (db) => {
           "SELECT id, userEmail,userPassword FROM Users WHERE id = ? LIMIT 1",
           [id]
         );
-      console.log(row);
+
       return row[0];
     },
     delete: async (id) => {
-      console.log("delete", id);
       const [row] = await db
         .promise()
         .execute("DELETE FROM Users WHERE id = ?", [id]);

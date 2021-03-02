@@ -18,7 +18,6 @@ module.exports = (db) => {
       return rows;
     },
     update: async (data) => {
-      console.log(data.placeId);
       const [
         rows,
       ] = await db
@@ -26,7 +25,7 @@ module.exports = (db) => {
         .execute("UPDATE Places SET isAvailable = 1  WHERE id = ?", [
           data.placeId,
         ]);
-      console.log(rows);
+
       return rows;
     },
   };

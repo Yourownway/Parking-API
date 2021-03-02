@@ -5,7 +5,6 @@ module.exports = (repositories) => {
     },
 
     create: async (data) => {
-      console.log(data);
       return await repositories.bookings.create(data);
     },
 

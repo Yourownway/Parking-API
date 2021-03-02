@@ -6,6 +6,9 @@ module.exports = (services) => {
         return res.status(400).json({ errMessage: "error missing parameters" });
       }
       const create = await services.places.create(data);
+      if (create) {
+        return res.status(200).json({ success: "new place created" });
+      }
     },
     getPlacesByFloor: async (req, res) => {
       let { floor } = req.params;

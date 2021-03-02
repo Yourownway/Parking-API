@@ -38,7 +38,7 @@ module.exports = (services) => {
           res.status(400).json("missing parameters");
         else {
           const userFound = await services.user.getByEmail(userEmail);
-          console.log(userFound);
+
           if (!userFound) {
             return res
               .status(401)
@@ -75,7 +75,7 @@ module.exports = (services) => {
 
       try {
         const deleteUser = await services.user.delete(userId);
-        console.log(deleteUser, "controller delete");
+
         if (deleteUser.affectedRows === 1) {
           res
             .status(200)
